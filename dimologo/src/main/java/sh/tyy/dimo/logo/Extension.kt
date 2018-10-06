@@ -1,7 +1,6 @@
 package sh.tyy.dimo.logo
 
 import android.graphics.Path
-import android.util.Pair
 
 internal fun Path.moveTo(point: Pair<Float, Float>) {
     moveTo(point.first, point.second)
