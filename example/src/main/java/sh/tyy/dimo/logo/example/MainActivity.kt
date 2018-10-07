@@ -1,35 +1,22 @@
 package sh.tyy.dimo.logo.example
 
-import android.content.Context
-import android.graphics.Color
+import android.app.Dialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
+import android.os.Handler
 import android.view.View
 import sh.tyy.dimo.logo.DimoLogoView
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var logoView: DimoLogoView
+    private var hud: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val layout = findViewById<ConstraintLayout>(R.id.layout_main)
-        val layoutParams = ConstraintLayout.LayoutParams(dpToPx(60f), dpToPx(60f))
-        layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-        layoutParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID
-        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-        logoView = DimoLogoView(this)
-        logoView.layoutParams = layoutParams
-        logoView.setBackgroundColor(Color.BLACK)
-        layout.addView(logoView)
+        logoView = findViewById(R.id.view_logo)
         logoView.playAnimation()
-    }
-
-    fun dpToPx(dp: Float): Int {
-        return (dp * resources.displayMetrics.density).toInt()
     }
 
     fun onPlayAnimation(view: View) {
@@ -38,5 +25,18 @@ class MainActivity : AppCompatActivity() {
 
     fun onStopAnimation(view: View) {
         logoView.stopAnimation()
+    }
+
+    fun onShowHUD(view: View) {
+        hud = DimoLogoView.hud(this)
+        hud?.show()
+        Handler().postDelayed({
+            hud?.dismiss()
+            hud = DimoLogoView.hud(this, "Nothing")
+            hud?.show()
+            Handler().postDelayed({
+                hud?.dismiss()
+            }, 3000)
+        }, 3000)
     }
 }

@@ -1,16 +1,26 @@
 package sh.tyy.dimo.logo
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
+import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import android.view.Window
+import android.widget.TextView
 
-public class DimoLogoView(context: Context) : View(context) {
+
+class DimoLogoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
     companion object {
 
+        private const val defaultWidth: Int = 60
+        private const val defaultHeight: Int = 60
         private const val BaseReference: Float = 60.0f
         private const val WaterDropArcRadiusRatio: Float = 1.0f / 12.0f
         private const val WaterDropControlPointOffsetYRatio: Float = 1.0f / 15.0f
@@ -20,6 +30,22 @@ public class DimoLogoView(context: Context) : View(context) {
         private const val LineWidthRatio: Float = 1.0f / 20.0f
         private const val BounceSizeRatio: Float = 1.0f / 60.0f
         private val LineStretchLengthsRatio: List<Float> = listOf(.2f, 2.0f / 15.0f, .1f)
+
+        fun hud(context: Context, text: String? = null): Dialog {
+            val contentView = LayoutInflater.from(context).inflate(R.layout.hud_dimo_logo, null)
+            val logoView: DimoLogoView = contentView.findViewById(R.id.view_logo)
+            val textView: TextView = contentView.findViewById(R.id.text_hud)
+            textView.text = text
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(contentView)
+            dialog.setCanceledOnTouchOutside(false)
+            dialog.setCancelable(false)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window?.setDimAmount(0f)
+            logoView.playAnimation()
+            return dialog
+        }
     }
 
     private var waterDropArcRadius: Float = 5.0f
@@ -89,6 +115,34 @@ public class DimoLogoView(context: Context) : View(context) {
         updateLayout()
         drawWaterDrop(time, canvas)
         drawLine(time, canvas)
+    }
+
+    @SuppressLint("SwitchIntDef")
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val desiredWidth = (defaultWidth * resources.displayMetrics.density).toInt()
+        val desiredHeight = (defaultHeight * resources.displayMetrics.density).toInt()
+
+        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
+        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
+
+
+        val width: Int = when (widthMode) {
+            View.MeasureSpec.EXACTLY -> widthSize
+            View.MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            else -> desiredWidth
+        }
+
+        val height: Int = when (heightMode) {
+            View.MeasureSpec.EXACTLY -> heightSize
+            View.MeasureSpec.AT_MOST -> Math.min(desiredHeight, heightSize)
+            else -> desiredHeight
+        }
+
+        setMeasuredDimension(width, height)
     }
 
     private fun drawWaterDrop(time: Float, canvas: Canvas?) {
