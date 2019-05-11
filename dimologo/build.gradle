@@ -1,8 +1,24 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
 
-group = 'com.github.luckytianyiyan'
+def libraryGroupId = 'sh.tyy'
+def libraryArtifactId = 'dimologo'
+def libraryVersionCode = 2
+def libraryVersion = '1.0.0'
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId libraryGroupId
+            version = libraryVersion
+            artifactId libraryArtifactId
+            // Tell maven to prepare the generated "*.aar" file for publishing
+            artifact("$buildDir/outputs/aar/${libraryArtifactId}-release.aar")
+        }
+    }
+}
 
 android {
     compileSdkVersion 27
@@ -10,8 +26,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 2
-        versionName "0.2.0"
+        versionCode libraryVersionCode
+        versionName libraryVersion
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
