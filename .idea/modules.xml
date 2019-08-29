@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DimoLogo.iml" filepath="$PROJECT_DIR$/DimoLogo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DimoLogo-Android.iml" filepath="$PROJECT_DIR$/DimoLogo-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/dimologo/dimologo.iml" filepath="$PROJECT_DIR$/dimologo/dimologo.iml" />
       <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
     </modules>
