@@ -1,6 +1,6 @@
 Dimo Logo
 ===
-[![codebeat badge](https://codebeat.co/badges/4e4a4566-e562-49b1-905b-fe2f796d0152)](https://codebeat.co/a/luckytianyiyan/projects/github-com-luckytianyiyan-dimologo-android-master)
+[![GitHub tag](https://shields.dev.inkonote.com/github/tag/ty0x2333/DimoLogo-Android.svg)]()
 
 Usage
 ---
@@ -10,7 +10,13 @@ Add it in your root build.gradle at the end of repositories:
 allprojects {
     repositories {
         ...
-        maven { url 'https://jitpack.io' }
+        maven {
+            url "http://artifactory.dev.inkonote.com/artifactory/libs-release-local"
+            credentials {
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+            }
+        }
     }
 }
 ```
@@ -19,6 +25,6 @@ Add the dependency
 
 ```
 dependencies {
-    implementation 'com.github.luckytianyiyan:DimoLogo-Android:1.0.0'
+    implementation 'sh.tyy:dimologo:1.0.0'
 }
 ```
