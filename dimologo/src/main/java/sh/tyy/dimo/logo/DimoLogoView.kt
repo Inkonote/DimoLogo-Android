@@ -77,6 +77,22 @@ class DimoLogoView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     private var time: Float = .0f
 
+    var progress: Float
+        set(value) {
+            stopAnimation()
+            val progress: Float = max(0f, min(value, 1.0f))
+            time = animationDuration * progress
+            invalidate()
+        }
+        get() {
+            if (animationDuration <= 0) {
+                return 0f
+            }
+            val timeProgress = time / animationDuration
+            return max(0f, min(timeProgress, 1.0f))
+
+        }
+
     var foregroundColor: Int = Color.WHITE
         set(value) {
             field = value
