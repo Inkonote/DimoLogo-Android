@@ -10,7 +10,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -21,29 +20,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-        apply plugin: "com.jfrog.artifactory"
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-artifactory {
-    contextUrl = "${artifactory_contextUrl}"
-    //The base Artifactory URL if not overridden by the publisher/resolver
-    publish {
-        repository {
-            repoKey = 'libs-release-local'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-            maven = true
-        }
-        defaults {
-            publications('aar')  // 表示要发布的文件类型
-            publishArtifacts = true
-            properties = ['qa.level': 'basic', 'dev.team': 'core']
-            publishPom = true  // 是否将自动生成的pom.xml文件发布到Artifactory
-        }
-    }
 }

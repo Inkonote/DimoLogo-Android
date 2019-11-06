@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 
 def libraryGroupId = 'sh.tyy'
 def libraryArtifactId = 'dimologo'
-def libraryVersionCode = 3
-def libraryVersion = '1.1.0'
+def libraryVersionCode = 4
+def libraryVersion = '1.1.1'
 
 publishing {
     publications {
@@ -16,6 +15,17 @@ publishing {
             artifactId libraryArtifactId
             // Tell maven to prepare the generated "*.aar" file for publishing
             artifact("$buildDir/outputs/aar/${libraryArtifactId}-release.aar")
+        }
+    }
+
+    repositories {
+        maven {
+            name "TyGitHubPackages"
+            url "https://maven.pkg.github.com/${github_user}/android-libraries"
+            credentials {
+                username = "${github_user}"
+                password = "${github_token}"
+            }
         }
     }
 }
