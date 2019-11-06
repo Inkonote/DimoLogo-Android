@@ -4,27 +4,15 @@ Dimo Logo
 
 Usage
 ---
-Add it in your root build.gradle at the end of repositories:
 
-```
-allprojects {
-    repositories {
-        ...
-        maven {
-            url "http://artifactory.dev.inkonote.com/artifactory/libs-release-local"
-            credentials {
-                username = "${artifactory_user}"
-                password = "${artifactory_password}"
-            }
-        }
-    }
-}
-```
+Configure Project: https://github.com/ty0x2333/android-libraries
 
 Add the dependency
 
+LAST_VERSION: ![GitHub tag](https://shields.dev.inkonote.com/github/tag/ty0x2333/DimoLogo-Android.svg)
+
 ```
 dependencies {
-    implementation 'sh.tyy:dimologo:1.0.0'
+    implementation 'sh.tyy:dimologo:<LAST_VERSION>'
 }
 ```
