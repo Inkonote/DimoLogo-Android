@@ -1,38 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/hud_dimo_logo_bg"
+    android:paddingStart="28dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="28dp"
+    android:paddingBottom="15dp">
 
-    <FrameLayout
-        android:layout_width="116dp"
-        android:layout_height="116dp"
-        android:background="@drawable/hud_dimo_logo_bg"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
+    <sh.tyy.dimo.logo.DimoLogoView
+        android:id="@+id/view_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
 
-            <sh.tyy.dimo.logo.DimoLogoView
-                android:id="@+id/view_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/text_hud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="68dp"
+        android:lines="1"
+        android:singleLine="true"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp" />
 
-            <TextView
-                android:id="@+id/text_hud"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:lines="1"
-                android:singleLine="true"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-    </FrameLayout>
-
-</RelativeLayout>
+</FrameLayout>
