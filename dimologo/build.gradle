@@ -4,8 +4,8 @@ apply plugin: 'maven-publish'
 
 def libraryGroupId = 'sh.tyy'
 def libraryArtifactId = 'dimologo'
-def libraryVersionCode = 5
-def libraryVersion = '1.1.2'
+def libraryVersionCode = 6
+def libraryVersion = '1.2.0'
 
 publishing {
     publications {
