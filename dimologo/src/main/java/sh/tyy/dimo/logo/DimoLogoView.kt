@@ -102,6 +102,12 @@ class DimoLogoView @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
 
     init {
+        attrs?.let {
+            val a = context.theme.obtainStyledAttributes(it, R.styleable.DimoLogoView, defStyleAttr, 0)
+            if (a.hasValue(R.styleable.DimoLogoView_foregroundColor)) {
+                foregroundColor = a.getColor(R.styleable.DimoLogoView_foregroundColor, Color.WHITE)
+            }
+        }
         updateTimes()
     }
 
