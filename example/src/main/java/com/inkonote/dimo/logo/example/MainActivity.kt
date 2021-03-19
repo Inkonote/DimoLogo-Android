@@ -1,4 +1,4 @@
-package sh.tyy.dimo.logo.example
+package com.inkonote.dimo.logo.example
 
 import android.app.Dialog
 import android.os.Build
@@ -8,7 +8,7 @@ import android.os.Handler
 import android.view.View
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.activity_main.*
-import sh.tyy.dimo.logo.DimoLogoView
+import com.inkonote.dimo.logo.DimoLogoView
 
 
 class MainActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package sh.tyy.dimo.logo.example
+package com.inkonote.dimo.logo.example
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("sh.tyy.dimo.logo.example", appContext.packageName)
+        assertEquals("com.inkonote.dimo.logo.example", appContext.packageName)
     }
 }

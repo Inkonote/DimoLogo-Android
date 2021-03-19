@@ -9,7 +9,7 @@
     android:paddingBottom="15dp">
 
 
-    <sh.tyy.dimo.logo.DimoLogoView
+    <com.inkonote.dimo.logo.DimoLogoView
         android:id="@+id/view_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

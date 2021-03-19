@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "sh.tyy.dimo.logo.example"
+        applicationId "com.inkonote.dimo.logo.example"
         minSdkVersion 15
         targetSdkVersion 29
         versionCode 1

@@ -1,4 +1,4 @@
-package sh.tyy.dimo.logo.example
+package com.inkonote.dimo.logo.example
 
 import org.junit.Test
 

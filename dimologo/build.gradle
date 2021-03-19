@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
-def libraryGroupId = 'sh.tyy'
+def libraryGroupId = 'com.inkonote'
 def libraryArtifactId = 'dimologo'
 def libraryVersionCode = 6
 def libraryVersion = '1.2.0'

@@ -1,4 +1,4 @@
-package sh.tyy.dimo.logo
+package com.inkonote.dimo.logo
 
 import android.graphics.Canvas
 import android.graphics.Paint

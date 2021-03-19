@@ -1,4 +1,4 @@
-package sh.tyy.dimo.logo
+package com.inkonote.dimo.logo
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
