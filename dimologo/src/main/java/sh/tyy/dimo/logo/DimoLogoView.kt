@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import android.view.Window
@@ -21,15 +20,15 @@ class DimoLogoView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
         private const val defaultWidth: Int = 60
         private const val defaultHeight: Int = 60
-        private const val BaseReference: Float = 60.0f
-        private const val WaterDropArcRadiusRatio: Float = 1.0f / 12.0f
-        private const val WaterDropControlPointOffsetYRatio: Float = 1.0f / 15.0f
-        private const val WaterDroStretchLengthRatio: Float = 1.0f / 15.0f
-        private const val WaterDropElemMaxIntervalRatio: Float = 7.0f / 30.0f
-        private const val LineMarginHorizontalRatio: Float = 1.0f / 12.0f
-        private const val LineWidthRatio: Float = 1.0f / 20.0f
-        private const val BounceSizeRatio: Float = 1.0f / 60.0f
-        private val LineStretchLengthsRatio: List<Float> = listOf(.2f, 2.0f / 15.0f, .1f)
+        private const val baseReference: Float = 60.0f
+        private const val waterDropArcRadiusRatio: Float = 1.0f / 12.0f
+        private const val waterDropControlPointOffsetYRatio: Float = 1.0f / 15.0f
+        private const val waterDroStretchLengthRatio: Float = 1.0f / 15.0f
+        private const val waterDropElemMaxIntervalRatio: Float = 7.0f / 30.0f
+        private const val lineMarginHorizontalRatio: Float = 1.0f / 12.0f
+        private const val lineWidthRatio: Float = 1.0f / 20.0f
+        private const val bounceSizeRatio: Float = 1.0f / 60.0f
+        private val lineStretchLengthsRatio: List<Float> = listOf(.2f, 2.0f / 15.0f, .1f)
 
         fun hud(context: Context, text: String? = null): Dialog {
             val contentView = LayoutInflater.from(context).inflate(R.layout.hud_dimo_logo, null)
@@ -48,27 +47,8 @@ class DimoLogoView @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
     }
 
-    private var waterDropArcRadius: Float = 5.0f
-    private var waterDropControlPointOffsetY: Float = 4.0f
-    private var waterDroStretchLength: Float = 4.0f
-    private var waterDropElemMaxInterval: Float = 14.0f
-    private var lineMarginHorizontal: Float = 5.0f
-    private var lineWidth: Float = 3.0f
-    private var bounceSize: Float = 1.0f
-    private var lineStretchLengths: List<Float> = listOf(12.0f, -8.0f, 6.0f)
-
-    private var popAnimationFinishedTime: Float = .0f
-    private var repopAnimationFinishedTime: Float = .0f
-    private var moveAnimationFinishedTime: Float = .0f
-    private var waterDropStretchBeginTime: Float = .0f
-    private var waterDropStretchFinishedTime: Float = .0f
-    private var fadeInBeginTime: Float = .0f
-    private var fadeInFinishedTime: Float = .0f
-
-    private var lineStretchBeginTime: Float = .0f
-    private var lineStretchFinishedTime: Float = .0f
-    private var lineStretch2FinishedTime: Float = .0f
-    private var lineStretch3FinishedTime: Float = .0f
+    private val line: Line = Line()
+    private val waterDrop: WaterDrop = WaterDrop()
 
     private var animationDuration: Float = 1.2f
     var animationInterval: Float = .15f
@@ -135,8 +115,8 @@ class DimoLogoView @JvmOverloads constructor(context: Context, attrs: AttributeS
         super.onDraw(canvas)
         // TODO:
         updateLayout()
-        drawWaterDrop(time, canvas)
-        drawLine(time, canvas)
+        waterDrop.draw(width = width, height = height, lineWidth = line.width, time = time, canvas = canvas, foregroundColor = foregroundColor)
+        line.draw(width = width, height = height, time = time, canvas = canvas, foregroundColor = foregroundColor)
     }
 
     @SuppressLint("SwitchIntDef")
@@ -146,179 +126,64 @@ class DimoLogoView @JvmOverloads constructor(context: Context, attrs: AttributeS
         val desiredWidth = (defaultWidth * resources.displayMetrics.density).toInt()
         val desiredHeight = (defaultHeight * resources.displayMetrics.density).toInt()
 
-        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
-        val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
-        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
-        val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
 
         val width: Int = when (widthMode) {
-            View.MeasureSpec.EXACTLY -> widthSize
-            View.MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            MeasureSpec.EXACTLY -> widthSize
+            MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
             else -> desiredWidth
         }
 
         val height: Int = when (heightMode) {
-            View.MeasureSpec.EXACTLY -> heightSize
-            View.MeasureSpec.AT_MOST -> Math.min(desiredHeight, heightSize)
+            MeasureSpec.EXACTLY -> heightSize
+            MeasureSpec.AT_MOST -> Math.min(desiredHeight, heightSize)
             else -> desiredHeight
         }
 
         setMeasuredDimension(width, height)
     }
 
-    private fun drawWaterDrop(time: Float, canvas: Canvas?) {
-        val arcCenterX = width / 2.0f
-        var arcCenterY = height / 2.0f - waterDropElemMaxInterval - (waterDropArcRadius + lineWidth) / 2.0f
-        val popRange = 0.0f..popAnimationFinishedTime
-        val repopRange = popAnimationFinishedTime..repopAnimationFinishedTime
-        val noMoveRange = 0.0f..repopAnimationFinishedTime
-        val moveRange = repopAnimationFinishedTime..moveAnimationFinishedTime
-        val noStretchRange = 0.0f..waterDropStretchBeginTime
-        val stretchRange = waterDropStretchBeginTime..waterDropStretchFinishedTime
-        val alphaRange = fadeInBeginTime..fadeInFinishedTime
-        var alpha: Float = 1f
-
-        // move
-        if (!noMoveRange.contains(time)) {
-            val elapsed = time - moveRange.start
-            val distance: Float = 2f * (height / 2.0f - arcCenterY)
-            arcCenterY += distance * min(1f, elapsed / moveRange.length())
-        }
-
-        var radius = waterDropArcRadius
-
-        if (popRange.contains(time)) {
-            val elapsed = time - popRange.start
-            radius = (waterDropArcRadius + bounceSize) * elapsed / popRange.length()
-        } else if (repopRange.contains(time)) {
-            val elapsed = time - repopRange.start
-            radius = waterDropArcRadius + bounceSize * (1 - elapsed / repopRange.length())
-        }
-
-        if (noStretchRange.contains(time)) {
-            val paint: Paint = Paint()
-            paint.style = Paint.Style.FILL
-            paint.color = foregroundColor
-            canvas?.drawCircle(arcCenterX, arcCenterY, radius, paint)
-        } else {
-
-            if (time >= alphaRange.start) {
-                val elapsed = time - alphaRange.start
-                alpha = 1 - elapsed / alphaRange.length()
-            }
-
-            val elapsed = time - stretchRange.start
-            val path = waterDropPath(min(1f, elapsed / stretchRange.length()), arcCenterX, arcCenterY)
-            val paint: Paint = Paint()
-            paint.style = Paint.Style.FILL
-            paint.color = foregroundColor
-            paint.alpha = max((alpha * 255).toInt(), 0)
-            canvas?.drawPath(path, paint)
-        }
-    }
-
-
     private fun updateLayout() {
         var reference: Float = min(width, height).toFloat()
-        reference = max(reference, BaseReference)
+        reference = max(reference, baseReference)
 
-        waterDropArcRadius = reference * DimoLogoView.WaterDropArcRadiusRatio
+        waterDrop.arcRadius = reference * waterDropArcRadiusRatio
+        waterDrop.stretchLength = reference * waterDroStretchLengthRatio
+        waterDrop.bounceSize = reference * bounceSizeRatio
+        waterDrop.controlPointOffsetY = reference * waterDropControlPointOffsetYRatio
+        waterDrop.elemMaxInterval = reference * waterDropElemMaxIntervalRatio
 
-        waterDroStretchLength = reference * DimoLogoView.WaterDroStretchLengthRatio
-
-        lineMarginHorizontal = reference * DimoLogoView.LineMarginHorizontalRatio
-
-        lineWidth = reference * DimoLogoView.LineWidthRatio
-
-        bounceSize = reference * DimoLogoView.BounceSizeRatio
-
-        lineStretchLengths = DimoLogoView.LineStretchLengthsRatio.map { it * reference }
-
-        waterDropControlPointOffsetY = reference * DimoLogoView.WaterDropControlPointOffsetYRatio
-
-        waterDropElemMaxInterval = reference * DimoLogoView.WaterDropElemMaxIntervalRatio
-    }
-
-    private fun drawLine(time: Float, canvas: Canvas?) {
-        val boundsWidth = width
-        val centerX = boundsWidth / 2f
-        val centerY = height / 2f
-        val lineLength = boundsWidth - 2 * lineMarginHorizontal
-        val startPoint = Pair<Float, Float>(centerX - lineLength / 2f, centerY)
-        val endPoint = Pair<Float, Float>(centerX + lineLength / 2f, centerY)
-        val maxOffsets: List<Float> = lineStretchLengths
-        val centerPointX = centerX
-        var centerPointY = centerY
-
-        val stretchRanges = listOf(lineStretchBeginTime..lineStretchFinishedTime,
-                lineStretchFinishedTime..lineStretch2FinishedTime,
-                lineStretch2FinishedTime..lineStretch3FinishedTime)
-        for (i in 0 until 3) {
-
-            val range = stretchRanges[i]
-            val maxOffset = maxOffsets[i]
-            if (range.contains(time)) {
-                val elapsed = time - range.start
-                var process = elapsed / range.length()
-                if (process > .5) {
-                    process = abs(1 - process)
-                }
-                centerPointY += maxOffset * process
-                break
-            }
-        }
-
-        val linePath = Path()
-        val lineWith2: Float = lineWidth / 2f
-
-        val leftTop = Pair(startPoint.first, startPoint.second - lineWith2)
-        val centerTop = Pair(centerPointX, centerPointY - lineWith2)
-        val rightTop = Pair(endPoint.first, endPoint.second - lineWith2)
-
-        val leftBottom = Pair(startPoint.first, startPoint.second + lineWith2)
-        val centerBottom = Pair(centerPointX, centerPointY + lineWith2)
-        val rightBottom = Pair(endPoint.first, endPoint.second + lineWith2)
-
-        linePath.moveTo(leftTop)
-        linePath.quadTo(leftTop.first + 16f, leftTop.second, centerTop)
-        linePath.quadTo(rightTop.first - 16f, rightTop.second, rightTop)
-        linePath.lineTo(rightBottom)
-        linePath.quadTo(rightBottom.first - 16f, rightBottom.second, centerBottom)
-        linePath.quadTo(leftBottom.first + 16f, leftBottom.second, leftBottom)
-        linePath.lineTo(leftTop)
-
-        val paint = Paint()
-        paint.style = Paint.Style.FILL
-        paint.color = foregroundColor
-        canvas?.drawPath(linePath, paint)
-    }
-
-    private fun waterDropPath(process: Float, arcCenterX: Float, arcCenterY: Float): Path {
-        val waterDropTop = Pair(arcCenterX, arcCenterY - waterDropArcRadius - waterDroStretchLength * process)
-        val path = Path()
-        path.moveTo(waterDropTop)
-        path.quadTo(arcCenterX + waterDropArcRadius, arcCenterY - waterDropControlPointOffsetY, arcCenterX + waterDropArcRadius, arcCenterY)
-        val arcLeft = arcCenterX - waterDropArcRadius
-        val arcTop = arcCenterY - waterDropArcRadius
-        path.addArc(RectF(arcLeft, arcTop, arcLeft + 2 * waterDropArcRadius, arcTop + 2 * waterDropArcRadius), 0f, 180f)
-        path.quadTo(arcCenterX - waterDropArcRadius, arcCenterY - waterDropControlPointOffsetY, waterDropTop)
-
-        return path
+        line.marginHorizontal = reference * lineMarginHorizontalRatio
+        line.width = reference * lineWidthRatio
+        line.stretchLengths = lineStretchLengthsRatio.map { it * reference }
     }
 
     private fun updateTimes() {
-        popAnimationFinishedTime = animationDuration * .125f
-        repopAnimationFinishedTime = animationDuration * .15f
-        moveAnimationFinishedTime = animationDuration * .85f
-        waterDropStretchBeginTime = animationDuration * .5f
-        waterDropStretchFinishedTime = animationDuration * .875f
-        fadeInBeginTime = animationDuration * .8f
-        fadeInFinishedTime = animationDuration * 1f
+        waterDrop.animationTimeRange.setPop(startExpand = 0f,
+                startShrink = (animationDuration * 0.125f),
+                endShrink = (animationDuration * 0.15f))
 
-        lineStretchBeginTime = animationDuration * .5f
-        lineStretchFinishedTime = animationDuration * .8f
-        lineStretch2FinishedTime = animationDuration * .9f
-        lineStretch3FinishedTime = animationDuration * 1f
+        waterDrop.animationTimeRange.setMove(startStand = 0f,
+                startMove = waterDrop.animationTimeRange.shrink.endInclusive,
+                endMove = (animationDuration * 0.85f))
+
+        waterDrop.animationTimeRange.setDeform(start = 0f,
+                startStretch = animationDuration * 0.5f,
+                endStretch = animationDuration * 0.875f)
+
+        waterDrop.animationTimeRange.fadeIn = (animationDuration * 0.8f)..(animationDuration * 1f)
+
+        val lineStretchTimes = listOf(animationDuration * 0.5f,
+                animationDuration * 0.8f,
+                animationDuration * 0.9f,
+                animationDuration * 1f)
+
+        line.stretchTimeRanges = listOf(lineStretchTimes[0]..lineStretchTimes[1],
+                lineStretchTimes[1]..lineStretchTimes[2],
+                lineStretchTimes[2]..lineStretchTimes[3])
     }
 }
