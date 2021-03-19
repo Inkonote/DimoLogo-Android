@@ -7,28 +7,36 @@ def libraryArtifactId = 'dimologo'
 def libraryVersionCode = 6
 def libraryVersion = '1.2.0'
 
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId libraryGroupId
-            version = libraryVersion
-            artifactId libraryArtifactId
-            // Tell maven to prepare the generated "*.aar" file for publishing
-            artifact("$buildDir/outputs/aar/${libraryArtifactId}-release.aar")
-        }
-    }
+//publishing {
+//    publications {
+//        aar(MavenPublication) {
+//            groupId libraryGroupId
+//            version = libraryVersion
+//            artifactId libraryArtifactId
+//            // Tell maven to prepare the generated "*.aar" file for publishing
+//            artifact("$buildDir/outputs/aar/${libraryArtifactId}-release.aar")
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+//            name "TyGitHubPackages"
+//            url "https://maven.pkg.github.com/${github_user}/android-libraries"
+//            credentials {
+//                username = "${github_user}"
+//                password = "${github_token}"
+//            }
+//        }
+//    }
+//}
 
-    repositories {
-        maven {
-            name "TyGitHubPackages"
-            url "https://maven.pkg.github.com/${github_user}/android-libraries"
-            credentials {
-                username = "${github_user}"
-                password = "${github_token}"
-            }
-        }
-    }
+ext {
+    PUBLISH_GROUP_ID = libraryGroupId
+    PUBLISH_ARTIFACT_ID = libraryArtifactId
+    PUBLISH_VERSION = libraryVersion
 }
+
+apply from: "${rootProject.projectDir}/release-sonatype.gradle"
 
 android {
     compileSdkVersion 29
