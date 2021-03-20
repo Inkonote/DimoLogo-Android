@@ -26,3 +26,7 @@ Download the latest AAR from [Maven Central](https://search.maven.org/search?q=g
 ```gradle
 implementation 'com.inkonote.dimologo:1.3.2'
 ```
+
+License
+---
+DimoLogo is available under the Apache 2.0 license. See the LICENSE file for more info.
