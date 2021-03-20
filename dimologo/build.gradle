@@ -1,11 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
 
 def libraryGroupId = 'com.inkonote'
 def libraryArtifactId = 'dimologo'
-def libraryVersionCode = 7
-def libraryVersion = '1.3.0'
+def libraryVersionCode = 8
+def libraryVersion = '1.3.1'
 
 //publishing {
 //    publications {
@@ -29,14 +28,6 @@ def libraryVersion = '1.3.0'
 //        }
 //    }
 //}
-
-ext {
-    PUBLISH_GROUP_ID = libraryGroupId
-    PUBLISH_ARTIFACT_ID = libraryArtifactId
-    PUBLISH_VERSION = libraryVersion
-}
-
-apply from: "${rootProject.projectDir}/release-sonatype.gradle"
 
 android {
     compileSdkVersion 29
@@ -68,6 +59,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-repositories {
-    mavenCentral()
+
+ext {
+    PUBLISH_GROUP_ID = libraryGroupId
+    PUBLISH_ARTIFACT_ID = libraryArtifactId
+    PUBLISH_VERSION = libraryVersion
 }
+
+apply from: "${rootProject.projectDir}/release-sonatype.gradle"
