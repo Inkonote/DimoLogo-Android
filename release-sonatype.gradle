@@ -33,7 +33,7 @@ publishing {
             version PUBLISH_VERSION
 
             // Two artifacts, the `aar` and the sources
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            artifact("$buildDir/outputs/aar/${PUBLISH_ARTIFACT_ID}-release.aar")
             artifact androidSourcesJar
 
             // Self-explanatory metadata for the most part
