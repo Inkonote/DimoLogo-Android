@@ -2,13 +2,13 @@ package com.inkonote.dimo.logo.example
 
 import android.app.Dialog
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.SeekBar
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.appcompat.app.AppCompatActivity
 import com.inkonote.dimo.logo.DimoLogoView
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -60,5 +60,10 @@ class MainActivity : AppCompatActivity() {
                 hud?.dismiss()
             }, 3000)
         }, 3000)
+    }
+
+    fun onChangeColor(view: View) {
+        val color = (Math.random() * 16777215).toInt() or (0xFF shl 24)
+        logoView.foregroundColor = color
     }
 }
